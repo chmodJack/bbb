@@ -3,6 +3,9 @@
 _main:
 	ldr sp,=0x4030ff20
 	bic sp,sp,#7
+
+	bl main
+
 	bl board_init_f_alloc_reserve
 	mov sp,r0
 	//set up gd here, outside any C code
@@ -11,7 +14,7 @@ _main:
 	//call board_init_f(0)
 	mov r0,#0
 	bl board_init_f
-	//TODO
+	bl main
 
 .global board_init_f_alloc_reserve
 board_init_f_alloc_reserve:
@@ -31,14 +34,14 @@ board_init_f_init_reserve:
 	pop {r4, pc}
 .global board_init_f
 board_init_f:
+	mov pc,lr
 	//这个r3是为了帧8字节对其
 	push {r3,lr}
 
-	bl hw_data_init
-	bl early_system_init
-	bl board_early_init_f
-	bl sdram_init
-
+	//bl hw_data_init
+	//bl early_system_init
+	//bl board_early_init_f
+	//bl sdram_init
 
 	str r0,[r9,#4]
 	movs r2,#0
