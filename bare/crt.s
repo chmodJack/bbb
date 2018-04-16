@@ -11,6 +11,7 @@ _main:
 	//call board_init_f(0)
 	mov r0,#0
 	bl board_init_f
+	//TODO
 
 .global board_init_f_alloc_reserve
 board_init_f_alloc_reserve:
@@ -30,13 +31,28 @@ board_init_f_init_reserve:
 	pop {r4, pc}
 .global board_init_f
 board_init_f:
+	//这个r3是为了帧8字节对其
 	push {r3,lr}
+
+	bl hw_data_init
+	bl early_system_init
+	bl board_early_init_f
+	bl sdram_init
+
+
 	str r0,[r9,#4]
 	movs r2,#0
 	str r2,[r9,#28]
 	ldr r0,=0x8083c12c
-	bl initcall_run_list
+	//bl initcall_run_list
 	//if return value is not zero, hang.
 	cmp r0,#0
 	bne .
 	pop {r3,pc}
+
+.global hw_data_init
+hw_data_init:
+	ldr r3,=0x8084f620
+	ldr r2,=0x8083b820
+	str r2,[r3]
+	mov pc,lr
