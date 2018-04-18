@@ -15,10 +15,8 @@ int my_puts(const char *str)
 		my_putchar(*str);
 		str+=1;
 	}
-
 	if(*str == 0)
 		my_putchar('z');
-
 	return 0;
 }
 
